@@ -3,13 +3,16 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import gspread
+from streamlit_autorefresh import st_autorefresh
+from datetime import datetime
 from oauth2client.service_account import ServiceAccountCredentials
 
 st.set_page_config(
     page_title="Dashboard Maturitas Risiko",
     layout="wide"
 )
-
+# Auto refresh setiap 60 detik
+st_autorefresh(interval=40000, key="datarefresh")
 # =========================
 # GLOBAL STYLE
 # =========================
@@ -103,6 +106,9 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
+st.caption(
+    f"Data terakhir diperbarui: {datetime.now().strftime('%d-%m-%Y %H:%M:%S')}"
+)
 
 # =========================
 # LOGO HEADER
@@ -232,7 +238,16 @@ bobot_aspek_df = pd.DataFrame({
     "ASPEK": ["PERENCANAAN", "KAPABILITAS", "HASIL"],
     "BOBOT": [40, 30, 30]
 })
-
+if total_aktual < 2:
+    level_maturitas = "🔴 LEVEL 1 - INITIAL"
+elif total_aktual < 3:
+    level_maturitas = "🟠 LEVEL 2 - DEVELOPING"
+elif total_aktual < 4:
+    level_maturitas = "🟡 LEVEL 3 - DEFINED"
+elif total_aktual < 4.5:
+    level_maturitas = "🟢 LEVEL 4 - MANAGED"
+else:
+    level_maturitas = "🏆 LEVEL 5 - OPTIMIZING"
 # =========================
 # HEADER TITLE
 # =========================
@@ -340,7 +355,7 @@ warna_bar = []
 for nilai in capaian_aspek_df["CAPAIAN"]:
     if nilai < 60:
         warna_bar.append("#FF4D4D")   # Merah terang
-    elif nilai <= 80:
+    elif nilai <= 80: 
         warna_bar.append("#FFD43B")   # Kuning emas
     else:
         warna_bar.append("#00C853")   # Hijau terang
