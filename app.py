@@ -338,14 +338,12 @@ capaian_aspek_df = capaian_aspek_df.sort_values("CAPAIAN", ascending=True)
 warna_bar = []
 
 for nilai in capaian_aspek_df["CAPAIAN"]:
-    if nilai < 50:
-        warna_bar.append("#ff4b4b")
-    elif nilai < 75:
-        warna_bar.append("#ffa500")
-    elif nilai < 90:
-        warna_bar.append("#ffd700")
+    if nilai < 60:
+        warna_bar.append("#FF4D4D")   # Merah terang
+    elif nilai <= 80:
+        warna_bar.append("#FFD43B")   # Kuning emas
     else:
-        warna_bar.append("#2ecc71")
+        warna_bar.append("#00C853")   # Hijau terang
 
 fig_progress = go.Figure()
 
